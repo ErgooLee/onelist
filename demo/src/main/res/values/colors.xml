@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary: 现代靛蓝色，更稳重且专业 -->
+    <color name="brand_primary">#4F46E5</color>
+    <color name="brand_primary_variant">#4338CA</color>
+    <color name="brand_on_primary">#FFFFFF</color>
+
+    <!-- Secondary: 柔和的青蓝色，用于点缀 -->
+    <color name="brand_secondary">#06B6D4</color>
+    <color name="brand_secondary_variant">#0891B2</color>
+    <color name="brand_on_secondary">#FFFFFF</color>
+
+    <!-- Background & Surface: 使用稍微带点灰蓝的白色，比纯白更有质感 -->
+    <color name="background">#F8FAFC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="on_background">#0F172A</color>
+    <color name="on_surface">#1E293B</color>
+
+    <!-- Error -->
+    <color name="error">#EF4444</color>
+
+    <color name="video_card_bg_1">#FFD9CEC7</color>
+    <color name="video_card_bg_2">#FFC9D6D0</color>
+    <color name="video_card_bg_3">#FFCDD8E1</color>
+    <color name="video_card_bg_4">#FFD8CFDB</color>
+    <color name="video_card_bg_5">#FFDDD6C7</color>
+    <color name="video_card_bg_6">#FFC8D2D8</color>
+    <color name="video_card_bg_7">#FFD7D1C9</color>
+    <color name="video_card_bg_8">#FFCCD3C6</color>
+</resources>

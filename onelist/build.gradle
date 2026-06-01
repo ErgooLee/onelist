@@ -1,0 +1,44 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
+plugins {
+    id 'com.android.library'
+    id 'com.vanniktech.maven.publish'
+}
+
+android {
+    namespace 'io.github.ergoo.onelist'
+
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 10
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation "androidx.recyclerview:recyclerview:1.4.0"
+    compileOnly "androidx.databinding:viewbinding:9.2.1"
+    compileOnly "androidx.paging:paging-runtime-ktx:3.5.0"
+}
+
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
+}
+

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <!-- ── Loading ─────────────────────────────────────────────────────── -->
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_loading_message"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tv_loading_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/state_loading"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progress_bar" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:constraint_referenced_ids="progress_bar,tv_loading_message" />
+
+    <!-- ── Empty ───────────────────────────────────────────────────────── -->
+
+    <ImageView
+        android:id="@+id/iv_empty_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:contentDescription="@string/state_empty"
+        android:src="@drawable/ic_state_empty"
+        app:layout_constraintBottom_toTopOf="@id/tv_empty_message"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tv_empty_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/state_empty"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/tv_empty_sub_message"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_empty_icon" />
+
+    <TextView
+        android:id="@+id/tv_empty_sub_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_empty_message" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:constraint_referenced_ids="iv_empty_icon,tv_empty_message,tv_empty_sub_message" />
+
+    <!-- ── Error ───────────────────────────────────────────────────────── -->
+
+    <ImageView
+        android:id="@+id/iv_error_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:contentDescription="@string/state_error"
+        android:src="@drawable/ic_state_error"
+        app:layout_constraintBottom_toTopOf="@id/tv_error_message"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tv_error_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/state_error"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/tv_error_sub_message"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_error_icon" />
+
+    <TextView
+        android:id="@+id/tv_error_sub_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@id/btn_retry"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_error_message" />
+
+    <Button
+        android:id="@+id/btn_retry"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:minWidth="120dp"
+        android:paddingHorizontal="24dp"
+        android:text="@string/state_retry"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_error_sub_message" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:constraint_referenced_ids="iv_error_icon,tv_error_message,tv_error_sub_message,btn_retry" />
+
+</merge>
+

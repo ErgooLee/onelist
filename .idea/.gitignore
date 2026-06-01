@@ -1,0 +1,9 @@
+# Ignore everything
+/*
+
+# But not these files...
+# keep .gitignore
+!/.gitignore
+# Every Developer share same code style and inspection profiles
+!/codeStyles
+!/inspectionProfiles

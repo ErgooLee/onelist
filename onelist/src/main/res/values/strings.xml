@@ -1,0 +1,10 @@
+<resources>
+    <string name="one_list_more_load_failed_tips">Network error, swipe up to retry</string>
+    <string name="one_list_more_final_page_tips">No more data</string>
+    <string name="one_list_more_scrolling_tips">Swipe up to load more</string>
+
+    <string name="one_list_refresh_scrolling_tips">Pull down to refresh</string>
+    <string name="one_list_refresh_succeed">Refresh successful</string>
+    <string name="one_list_refresh_failed">Refresh failed, pull down to retry</string>
+    <string name="one_list_refresh_trigger_tips">Release to refresh</string>
+</resources>

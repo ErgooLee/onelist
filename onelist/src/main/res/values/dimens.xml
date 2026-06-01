@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="one_list_refresh_progress_size">40dp</dimen>
+    <dimen name="one_list_refresh_height">88dp</dimen>
+    <dimen name="one_list_load_more_height">88dp</dimen>
+    <dimen name="one_list_text_size">14sp</dimen>
+</resources>

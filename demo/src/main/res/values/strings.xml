@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">onelist</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_discover">Discover</string>
+    <string name="tab_message">Message</string>
+    <string name="tab_profile">Profile</string>
+    <string name="page_content">Page %1$d</string>
+    <string name="state_loading">Loading…</string>
+    <string name="state_empty">No Data</string>
+    <string name="state_error">Load Failed</string>
+    <string name="state_retry">Retry</string>
+</resources>

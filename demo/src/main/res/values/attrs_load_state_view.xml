@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LoadStateView">
+        <attr name="sl_loadingMessage" format="string" />
+        <attr name="sl_emptyMessage" format="string" />
+        <attr name="sl_emptySubMessage" format="string" />
+        <attr name="sl_emptyIcon" format="reference" />
+        <attr name="sl_errorMessage" format="string" />
+        <attr name="sl_errorSubMessage" format="string" />
+        <attr name="sl_errorIcon" format="reference" />
+        <attr name="sl_retryText" format="string" />
+    </declare-styleable>
+</resources>
+
+

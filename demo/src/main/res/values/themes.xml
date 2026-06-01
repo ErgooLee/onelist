@@ -1,0 +1,25 @@
+<resources xmlns:tools="http://schemas.microsoft.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Onelist" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- 主色调 -->
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimaryVariant">@color/brand_primary_variant</item>
+        <item name="colorOnPrimary">@color/brand_on_primary</item>
+
+        <!-- 辅助色 -->
+        <item name="colorSecondary">@color/brand_secondary</item>
+        <item name="colorSecondaryVariant">@color/brand_secondary_variant</item>
+        <item name="colorOnSecondary">@color/brand_on_secondary</item>
+
+        <!-- 背景色优化 -->
+        <item name="android:windowBackground">@color/background</item>
+
+        <!-- 状态栏优化：现代 App 流行白色状态栏 + 深色图标 -->
+        <item name="android:statusBarColor">@color/surface</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+
+        <!-- 去掉默认的卡片/按钮阴影颜色，使其更干净 -->
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+    </style>
+</resources>

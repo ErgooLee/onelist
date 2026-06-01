@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/one_list_default_refresh_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/one_list_refresh_height">
+
+    <TextView
+        android:id="@+id/status_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/one_list_refresh_scrolling_tips"
+        android:textSize="@dimen/one_list_text_size" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="@dimen/one_list_refresh_progress_size"
+        android:layout_height="@dimen/one_list_refresh_progress_size"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateDuration="500"
+        android:indeterminateOnly="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</RelativeLayout>
