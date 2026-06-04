@@ -1,6 +1,42 @@
 # OneList
 
+[![简体中文](https://img.shields.io/badge/lang-简体中文-red.svg)](README_zh.md)
+
 A lightweight Android RecyclerView Adapter framework that simplifies common scenarios like multi-type lists, diff-based updates, pagination, and pull-to-refresh.
+
+## Installation
+
+```kotlin
+implementation("io.github.ergoolee:onelist:1.0.0")
+```
+
+## Architecture
+
+![Android RecyclerView Adapter Best Practice](AndroidRecyclerViewAdapterBestPractice.png)
+
+## Pain Points & Best Practices
+
+Traditional RecyclerView Adapter development suffers from the following pain points:
+
+| # | Pain Point | Traditional Approach | OneList Solution |
+|---|---|---|---|
+| 1 | **Multi-type boilerplate** | A single Adapter handles all view types with massive `when`/`switch` blocks in `onCreateViewHolder` and `onBindViewHolder`, leading to bloated, hard-to-maintain code | Each type is encapsulated in its own `ListBinder` — single responsibility, independently testable, and infinitely composable |
+| 2 | **Inefficient updates** | Manual `notifyDataSetChanged()` or error-prone `notifyItemXxx()` calls | Built-in `AsyncListDiffer` via `DifferAdapter` / `DifferMergeAdapter` — just call `submitList()` and let the framework compute minimal diffs on a background thread |
+| 3 | **Click listener leaks** | Listeners set in `onBindViewHolder` may hold stale references; forgetting to clear them causes memory leaks | Listeners are automatically bound in `onViewAttachedToWindow` and unbound in `onViewDetachedFromWindow` — zero risk of leaks |
+| 4 | **Pagination complexity** | Manual scroll listeners, threshold calculations, and state management | `LoadMoreAdapter` with configurable `preloadSize` and direction detection, simply combined via `ConcatAdapter` |
+| 5 | **Pull-to-refresh coupling** | Tightly coupling `SwipeRefreshLayout` logic into Activity/Fragment | `RefreshAdapter` + `RefreshView` provide a self-contained refresh lifecycle, fully decoupled from the page |
+| 6 | **First-page state management** | Manually toggling between loading, empty, and error views with `ViewSwitcher` or visibility flags scattered across Fragment/Activity | `EmptyContentAdapter` automatically manages loading / empty / error states for the first page — just set the state and the UI updates itself |
+| 7 | **Grid span management** | Manually setting `SpanSizeLookup` and tracking positions across multiple adapters | `OneListGridLayoutManager` + `Spannable` / `FullSpan` interfaces — each Binder declares its own span, the framework handles the rest |
+
+### The Best Practice — "Binder-per-Type" Architecture
+
+As shown in the diagram above, the recommended architecture follows these principles:
+
+1. **One `ListBinder` per view type** — Each binder owns its layout, binding logic, and click handling. Adding a new card type means adding a new Binder with zero changes to existing code (Open/Closed Principle).
+2. **Compose via `DifferMergeAdapter`** — Register all binders in one adapter; the framework dispatches creation and binding by data class type.
+3. **Automatic diff computation** — Feed heterogeneous data lists via `submitList()`; the `MergeItemCallback` routes `areItemsTheSame` / `areContentsTheSame` to each binder's type.
+4. **Decoupled pagination & refresh** — Use `ConcatAdapter` to stack `RefreshAdapter` + content adapter + `LoadMoreAdapter`. Each piece is independently reusable.
+5. **Declarative span & full-span** — Binders implement `Spannable` or mark themselves as `FullSpan`; no global lookup table needed.
 
 ## Features
 
@@ -16,7 +52,7 @@ A lightweight Android RecyclerView Adapter framework that simplifies common scen
 
 ## Requirements
 
-- **minSdk** 28
+- **minSdk** 10
 - **compileSdk** 36
 - AndroidX
 
@@ -92,6 +128,131 @@ loadMoreAdapter.preloadSize = 5
 
 recyclerView.adapter = ConcatAdapter(contentAdapter, loadMoreAdapter)
 ```
+
+## Complete Example
+
+The following example demonstrates a full-featured list page with pull-to-refresh, multi-type content, first-page state management (loading/empty/error), and load-more pagination — all composed via `ConcatAdapter`.
+
+### 1. Define Binder for each view type
+
+```kotlin
+// Each card type gets its own ListBinder
+class VerticalVideoListBinder : ListBinder<VerticalVideo, VerticalVideoViewHolder>() {
+
+    override fun getViewType() = R.layout.vertical_video_layout
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VerticalVideoViewHolder {
+        val binding = VerticalVideoLayoutBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return VerticalVideoViewHolder(binding)
+    }
+
+    override fun convert(holder: VerticalVideoViewHolder, data: VerticalVideo) {
+        holder.bind(data)
+    }
+
+    // Partial update via payloads
+    override fun convert(holder: VerticalVideoViewHolder, data: VerticalVideo, payloads: List<Any>) {
+        if (payloads.contains("like")) {
+            holder.setLikeStatus(data.liked)
+        } else {
+            convert(holder, data)
+        }
+    }
+
+    // Grid span: 2 columns
+    override fun spanCount(): Int = 2
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<VerticalVideo>() {
+            override fun areItemsTheSame(old: VerticalVideo, new: VerticalVideo) = old.id == new.id
+            override fun areContentsTheSame(old: VerticalVideo, new: VerticalVideo) = old == new
+            override fun getChangePayload(old: VerticalVideo, new: VerticalVideo): Any? {
+                return if (old.liked != new.liked) "like" else super.getChangePayload(old, new)
+            }
+        }
+    }
+}
+```
+
+### 2. Compose content adapter with multiple Binders
+
+```kotlin
+class HomeContentAdapter : DifferMergeAdapter(), MainContentAdapter {
+
+    val titleBinder = FloorTitleListBinder()
+    val verticalVideoBinder = VerticalVideoListBinder()
+    val horizontalVideoBinder = HorizontalVideoListBinder()
+
+    init {
+        addListBinder(titleBinder, FloorTitleListBinder.DIFF_CALLBACK)
+        addListBinder(verticalVideoBinder, VerticalVideoListBinder.DIFF_CALLBACK)
+        addListBinder(horizontalVideoBinder, HorizontalVideoListBinder.DIFF_CALLBACK)
+    }
+}
+```
+
+### 3. Create a LoadStateView for first-page states
+
+```kotlin
+// A multi-state view supporting loading / empty / error with retry
+val loadStateView = LoadStateView(context).apply {
+    layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+}
+```
+
+### 4. Assemble everything in the Fragment
+
+```kotlin
+class HomeFragment : Fragment() {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // 1️⃣ Create adapters
+        val contentAdapter = HomeContentAdapter()
+        val refreshAdapter = RefreshAdapter(OneListRefreshView(context))
+        val loadMoreAdapter = BottomLoadMoreAdapter(OneListBottomLoadMore(context))
+        val emptyAdapter = EmptyContentAdapter(loadStateView)
+
+        // 2️⃣ Compose via ConcatAdapter
+        recyclerView.adapter = ConcatAdapter(
+            refreshAdapter,   // pull-to-refresh
+            contentAdapter,   // multi-type content
+            emptyAdapter,     // first-page loading/empty/error
+            loadMoreAdapter,  // load-more pagination
+        )
+
+        // 3️⃣ Submit data — just one line
+        viewModel.uiState.onEach { contentAdapter.submitList(it.rows) }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+
+        // 4️⃣ First-page states — EmptyContentAdapter auto-shows when content is empty
+        loadStateView.showLoading()            // initial loading
+        loadStateView.showError("Network error") { viewModel.refresh() }  // error + retry
+        // once contentAdapter has data, emptyAdapter hides automatically
+
+        // 5️⃣ Click events — set on individual Binders
+        contentAdapter.verticalVideoBinder.clickListener = SimpleClickListener { data, _ ->
+            Toast.makeText(context, data.title, Toast.LENGTH_SHORT).show()
+        }
+    }
+}
+```
+
+### Key Takeaways
+
+| Concern | Handled by | Lines of code in Fragment |
+|---|---|---|
+| Multi-type rendering | `DifferMergeAdapter` + `ListBinder` per type | 0 (fully in Binders) |
+| Diff updates | `submitList()` | 1 |
+| First-page loading/error/empty | `EmptyContentAdapter` + `LoadStateView` | ~10 |
+| Pull-to-refresh | `RefreshAdapter` | ~5 |
+| Pagination | `BottomLoadMoreAdapter` | ~8 |
+| Click handling | `ListBinder.clickListener` / `addOnItemChildClickListener` | per-binder |
+
+The Fragment only orchestrates state flow — **zero view-type logic, zero manual notify calls, zero visibility toggling**.
 
 ## Project Structure
 
