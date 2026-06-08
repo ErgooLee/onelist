@@ -1,0 +1,32 @@
+name: Diagnose Maven Central
+
+on:
+  workflow_dispatch
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Check Maven Central connectivity
+        run: |
+          echo "Testing Maven Central connectivity..."
+          curl -v -u ${{ secrets.MAVEN_CENTRAL_USERNAME }}:${{ secrets.MAVEN_CENTRAL_PASSWORD }} \
+            https://central.sonatype.com/api/v1/user/token || true
+
+      - name: Check Gradle properties
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+        run: |
+          echo "Maven Central Username is set: ${ORG_GRADLE_PROJECT_mavenCentralUsername:+yes}"
+          echo "Maven Central Password is set: ${ORG_GRADLE_PROJECT_mavenCentralPassword:+yes}"
+
