@@ -32,4 +32,4 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.GPG_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_SECRET_KEY }}
-        run: ./gradlew :onelist:publishAllPublicationsToMavenCentralRepository -PVERSION_NAME=${{ env.VERSION }}
+        run: ./gradlew :onelist:publishAllPublicationsToMavenCentralRepository -PVERSION_NAME=${{ env.VERSION }} --info --stacktrace
