@@ -22,6 +22,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Extract version from tag
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
       - name: Publish to Maven Central
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
@@ -29,4 +32,4 @@ jobs:
           ORG_GRADLE_PROJECT_signing.keyId: ${{ secrets.GPG_KEY_ID }}
           ORG_GRADLE_PROJECT_signing.password: ${{ secrets.GPG_PASSWORD }}
           ORG_GRADLE_PROJECT_signing.secretKey: ${{ secrets.GPG_SECRET_KEY }}
-        run: ./gradlew :onelist:publishAllPublicationsToMavenCentralRepository
+        run: ./gradlew :onelist:publishAllPublicationsToMavenCentralRepository -PVERSION_NAME=${{ env.VERSION }}
